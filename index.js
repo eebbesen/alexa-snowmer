@@ -248,6 +248,16 @@ const LocationRequestHandler = {
   }
 };
 
+const SessionEndedRequestHandler = {
+  canHandle(handlerInput) {
+    return handlerInput.requestEnvelope.request.type === 'SessionEndedRequest';
+  },
+  handle(handlerInput) {
+    console.log(`Session ended with reason: ${handlerInput.requestEnvelope.request.reason}`);
+    return handlerInput.responseBuilder.getResponse();
+  }
+};
+
 const ErrorHandler = {
   canHandle() {
     return true;
@@ -267,7 +277,8 @@ let skill;
 exports.handler = Alexa.SkillBuilders.custom()
   .addRequestHandlers(
     LaunchRequestHandler,
-    LocationRequestHandler)
+    LocationRequestHandler,
+    SessionEndedRequestHandler)
   .addErrorHandlers(ErrorHandler)
   .lambda();
 
