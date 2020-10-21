@@ -1,0 +1,7 @@
+aws dynamodb create-table \
+    --table-name snowmer_places \
+    --attribute-definitions \
+        AttributeName=city,AttributeType=S \
+    --key-schema AttributeName=city,KeyType=HASH \
+    --provisioned-throughput ReadCapacityUnits=5,WriteCapacityUnits=5 \
+    --endpoint-url http://localhost:8000

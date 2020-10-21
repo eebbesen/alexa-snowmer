@@ -1,0 +1,5 @@
+aws dynamodb put-item \
+    --table-name snowmer_places \
+    --item '{ "city": {"S": "saint paul"}, "state": {"S": "mn"}, "date": {"S": "2018-09-15T21:25:40.248Z"} }' \
+    --return-consumed-capacity TOTAL \
+    --endpoint-url http://localhost:8000
