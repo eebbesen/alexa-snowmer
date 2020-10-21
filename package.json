@@ -11,5 +11,8 @@
     "snow"
   ],
   "author": "eebbesen",
-  "license": "MIT"
+  "license": "MIT",
+  "dependencies": {
+    "ask-sdk": "^2.10.0"
+  }
 }
