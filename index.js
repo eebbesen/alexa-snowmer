@@ -220,7 +220,7 @@ const lambdaServiceWrapper = function(handlerInput) {
         const payload = cityMappings[formatLocation(slots.cityName)];
         return handlerInput.responseBuilder
           .speak(resp)
-          .withSimpleCard('Snow Emergency', payload)
+          // .withSimpleCard('Snow Emergency', payload)
           .getResponse();
       }
     });

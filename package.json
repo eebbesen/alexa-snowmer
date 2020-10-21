@@ -3,6 +3,10 @@
   "version": "0.7.0",
   "description": "AWS skill for Snow Emergencies in MN",
   "main": "index.js",
+  "engines": {
+    "node": ">=12.18.2",
+    "npm": ">=6.14.5"
+  },
   "scripts": {
     "test": "mocha ./test/*",
     "zpack": "rm -rf node_modules/*; npm install --only=production; VER=`grep version package.json | perl -nle 'print $& if m{\\d.\\d.\\d}'`;zip -r builds/alexa-snowmer-$VER.zip index.js package.json node_modules artifacts; npm install"
