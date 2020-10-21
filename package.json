@@ -1,0 +1,15 @@
+{
+  "name": "alexa-snomer",
+  "version": "1.0.0",
+  "description": "AWS skill for Snow Emergencies in MN",
+  "main": "index.js",
+  "scripts": {
+    "test": "test"
+  },
+  "keywords": [
+    "alexa",
+    "snow"
+  ],
+  "author": "eebbesen",
+  "license": "MIT"
+}
