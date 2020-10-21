@@ -20,23 +20,36 @@ const LOCATION = {
 }
 
 var handlerInput = null;
-var responseBuilderMock = null;
+var responseBuilder = null;
 
 describe('skill methods', function(){
   beforeEach(() => {
-    index.response = {
+    responseBuilder = {
       speak: function(text) {
         console.log('SPEAK: ' + text);
         this.text = text
         return this;
       },
-      listen: function(text) {
-        console.log('LISTEN: ' + text);
+      reprompt: function(text) {
+        console.log('SPEAK: ' + text);
+        this.text = text
+        return this;
+      },
+      listen: function() {
+        console.log('LISTEN');
         return this;
       },
       renderTemplate: function(template) {
         console.log('RENDER TEMPLATE: ' + template);
         this.template = template;
+        return this;
+      },
+      getResponse: function() {
+        console.log('GET RESPONSE');
+        return this;
+      },
+      withSimpleCard: function(name, text) {
+        console.log('SIMPLE CARD: '+ name + ' ' + text);
         return this;
       }
     };
@@ -66,20 +79,6 @@ describe('skill methods', function(){
         }
       }
     };
-
-    const responseBuilder = {
-      speak: function(text) {
-        return this;
-      },
-      reprompt: function(text) {
-        return this;
-      },
-      getResponse: function() {
-        return 'done';
-      }
-    };
-
-    responseBuilderMock = sinon.mock(responseBuilder);
 
     handlerInput = {
       responseBuilder: responseBuilder,
@@ -400,7 +399,6 @@ describe('skill methods', function(){
 
   describe('lambdaServiceWrapper', () => {
     it ('works', (done) => {
-      responseBuilderMock.expects('speak').once();
 
       index.lambdaServiceWrapper(handlerInput);
 
@@ -420,8 +418,6 @@ describe('skill methods', function(){
     })
 
     it ('handles city with policy', (done) => {
-      responseBuilderMock.expects('speak').once();
-
       handlerInput.requestEnvelope.request.intent.slots.cityName.value = 'eagan'
 
       index.lambdaServiceWrapper(handlerInput)
@@ -430,7 +426,8 @@ describe('skill methods', function(){
           console.dir(resp, { depth: null })
           console.log('ababababa')
           console.dir(index.response, { depth: null })
-          // index.response.template.textContent.primaryText.text.should.equal("The City of Eagan has an odd/even winter parking schedule in place from November 15 – April 15. On even days: Parking is ALLOWED on the side of the street with EVEN house addresses. On odd days: Parking is ALLOWED on the side of the street with ODD house addresses.")
+          resp.text.should.equal("eagan doesn't post snow emergency status on their website so I can't tell if there is one currently. eagan's threshold for declaring a snow emergency is 2 inches.");
+          // resp.withSimpleCard().should.equal("The City of Eagan has an odd/even winter parking schedule in place from November 15 – April 15. On even days: Parking is ALLOWED on the side of the street with EVEN house addresses. On odd days: Parking is ALLOWED on the side of the street with ODD house addresses.")
 
           done()
         })
@@ -444,7 +441,8 @@ describe('skill methods', function(){
 
       index.lambdaServiceWrapper(handlerInput)
         .then(resp => {
-          // index.response.template.textContent.primaryText.text.should.equal("Generally, with a normal snowfall of 2 inches or more, the City plows all streets, alleys, parking lots, and affected sidewalks in the system. A normal call-out occurs at midnight or 1 a.m.")
+          resp.text.should.equal("saint cloud doesn't post snow emergency status on their website so I can't tell if there is one currently. saint cloud's threshold for declaring a snow emergency is 2 inches.");
+          // resp.text.should.equal("Generally, with a normal snowfall of 2 inches or more, the City plows all streets, alleys, parking lots, and affected sidewalks in the system. A normal call-out occurs at midnight or 1 a.m.")
 
           done()
         })
@@ -458,7 +456,7 @@ describe('skill methods', function(){
 
       index.lambdaServiceWrapper(handlerInput)
         .then(resp => {
-          // index.response.template.title.should.equal('Saint Cloud policy')
+          // resp.template.title.should.equal('Saint Cloud policy')
 
           done()
         })

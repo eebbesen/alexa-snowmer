@@ -203,6 +203,7 @@ const lambdaServiceWrapper = function(handlerInput) {
   console.log('lambdaServiceWrapper.handlerInput.requestEnvelope');
   console.dir(handlerInput.requestEnvelope, {depth: null});
   const slots = slotWorker(handlerInput.requestEnvelope.request.intent);
+
   if ('error' == slots) {
     return handlerInput.responseBuilder
       .speak('I am sorry, I am having problems right now.')
@@ -211,12 +212,16 @@ const lambdaServiceWrapper = function(handlerInput) {
 
   return statusWorker(slots.cityName, handlerInput.requestEnvelope.request.intent.slots.cityName.value)
     .then(resp => {
+      console.log('lambdaServiceWrapper.statusWorker.resp')
+      console.dir(resp, { depth: null })
       if ('need_city' == resp) {
-        launchLambdaServiceWrapper(null, handlerInput);
+        return launchLambdaServiceWrapper(null, handlerInput);
       } else {
         const payload = cityMappings[formatLocation(slots.cityName)];
         return handlerInput.responseBuilder
-          .speak(resp);
+          .speak(resp)
+          .withSimpleCard('Snow Emergency', payload)
+          .getResponse();
       }
     });
 };
@@ -228,7 +233,7 @@ const LaunchRequestHandler = {
     return handlerInput.requestEnvelope.request.type === 'LaunchRequest';
   },
   handle(handlerInput) {
-    return lambdaServiceWrapper(handlerInput)
+    return LambdaServiceWrapper(handlerInput)
   }
 };
 
